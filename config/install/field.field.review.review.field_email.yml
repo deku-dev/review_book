@@ -1,0 +1,20 @@
+# field.field.review.review.field_email.yml
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.review.field_email
+  module:
+    - reviews_book
+id: review.review.field_email
+field_name: field_email
+entity_type: review
+bundle: review
+label: email
+description: ""
+required: true
+translatable: false
+default_value: {}
+default_value_callback: ""
+settings: {}
+field_type: email

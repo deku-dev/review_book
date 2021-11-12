@@ -1,0 +1,6 @@
+services:
+  reviews_book.event_subscriber:
+    class: Drupal\reviews_book\EventSubscriber\ReviewsBookSubscriber
+    arguments: ['@messenger']
+    tags:
+      - { name: event_subscriber }

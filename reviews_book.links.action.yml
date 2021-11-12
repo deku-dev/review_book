@@ -1,0 +1,5 @@
+entity.review.add_form:
+  route_name: entity.review.add_form
+  title: 'Add Review'
+  appears_on:
+    - entity.review.collection
