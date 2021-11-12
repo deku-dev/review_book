@@ -94,4 +94,23 @@ interface ReviewInterface extends ContentEntityInterface, EntityChangedInterface
    */
   public function setTel($tel_number);
 
+  /**
+   * Gets the avatar of the user who created review.
+   *
+   * @return string
+   *   User avatar.
+   */
+  public function getAvatar();
+
+  /**
+   * Sets avatar of the user who created review.
+   *
+   * @param string $avatar
+   *   The avatar user.
+   *
+   * @return \Drupal\reviews_book\Entity\ReviewInterface
+   *   The called Review entity.
+   */
+  public function setAvatar($avatar);
+
 }
