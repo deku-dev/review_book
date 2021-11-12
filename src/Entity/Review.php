@@ -122,6 +122,21 @@ class Review extends ContentEntityBase implements ReviewInterface {
   /**
    * {@inheritdoc}
    */
+  public function getAvatar() {
+    return $this->get('avatar')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setAvatar($avatar) {
+    $this->set('avatar', $avatar);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getCreatedTime() {
     return $this->get('created')->value;
   }
@@ -252,6 +267,28 @@ class Review extends ContentEntityBase implements ReviewInterface {
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE)
       ->setRequired(TRUE);
+
+    $fields['avatar'] = BaseFieldDefinition::create('image')
+      ->setLabel(t('Avatar user'))
+      ->setDescription(t('User avatar who create the review.'))
+      ->setDefaultValue('')
+      ->setSettings([
+        'file_directory' => 'avatar',
+        'alt_field_required' => FALSE,
+        'file_extensions' => 'png jpg jpeg',
+      ])
+      ->setDisplayOptions('view', [
+        'label' => 'hidden',
+        'type' => 'default',
+        'weight' => 0,
+      ])
+      ->setDisplayOptions('form', [
+        'label' => 'hidden',
+        'type' => 'image_image',
+        'weight' => 0,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
 
     $fields['status']->setDescription(t('A boolean indicating whether the Review is published.'))
       ->setDisplayOptions('form', [
