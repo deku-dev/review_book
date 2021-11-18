@@ -47,7 +47,10 @@ use Drupal\user\UserInterface;
  *     "langcode" = "langcode",
  *     "published" = "status",
  *     "email" = "email",
- *     "tel_number" = "tel_number"
+ *     "tel_number" = "tel_number",
+ *     "avatar" = "avatar",
+ *     "picture" = "picture",
+ *     "text_review" = "text_review"
  *   },
  *   links = {
  *     "canonical" = "/reviews/review/{review}",
@@ -137,6 +140,36 @@ class Review extends ContentEntityBase implements ReviewInterface {
   /**
    * {@inheritdoc}
    */
+  public function getPicture() {
+    return $this->get('picture')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setPicture($picture) {
+    $this->set('picture', $picture);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getText() {
+    return $this->get('text_review')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setText($text) {
+    $this->set('text_review', $text);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getCreatedTime() {
     return $this->get('created')->value;
   }
@@ -217,7 +250,7 @@ class Review extends ContentEntityBase implements ReviewInterface {
       ->setLabel(t('Name'))
       ->setDescription(t('The name of the Review entity.'))
       ->setSettings([
-        'max_length' => 50,
+        'max_length' => 100,
         'text_processing' => 0,
       ])
       ->setDefaultValue('')
@@ -225,6 +258,12 @@ class Review extends ContentEntityBase implements ReviewInterface {
         'label' => 'above',
         'type' => 'string',
         'weight' => -4,
+      ])
+      ->setPropertyConstraints('value', [
+        'Length' => [
+          'min' => 2,
+          'minMessage' => t('Your name is to short. Please enter valid name.'),
+        ],
       ])
       ->setDisplayOptions('form', [
         'type' => 'string_textfield',
@@ -264,6 +303,14 @@ class Review extends ContentEntityBase implements ReviewInterface {
         'type' => 'string_tel',
         'weight' => -8,
       ])
+      ->setPropertyConstraints(
+        'value', [
+          'Regex' => [
+            'pattern' => '/^\+?\d{10,15}$/',
+            'message' => t('Your number mobile is not valid. Please enter the valid tel number'),
+          ],
+        ]
+      )
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE)
       ->setRequired(TRUE);
@@ -271,11 +318,35 @@ class Review extends ContentEntityBase implements ReviewInterface {
     $fields['avatar'] = BaseFieldDefinition::create('image')
       ->setLabel(t('Avatar user'))
       ->setDescription(t('User avatar who create the review.'))
-      ->setDefaultValue('')
+      ->setDefaultValue(NULL)
       ->setSettings([
-        'file_directory' => 'avatar',
+        'file_directory' => 'public://reviews_book/avatar',
         'alt_field_required' => FALSE,
         'file_extensions' => 'png jpg jpeg',
+        'max_filesize' => 2 * 1024 * 1024,
+      ])
+      ->setDisplayOptions('view', [
+        'label' => 'hidden',
+        'type' => 'default',
+        'weight' => 0,
+      ])
+      ->setDisplayOptions('form', [
+        'label' => 'hidden',
+        'type' => 'image_image',
+        'weight' => 0,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
+
+    $fields['review_picture'] = BaseFieldDefinition::create('image')
+      ->setLabel(t('Review picture'))
+      ->setDescription(t('Review picture for review.'))
+      ->setDefaultValue(NULL)
+      ->setSettings([
+        'file_directory' => 'public://reviews_book/picture',
+        'alt_field_required' => FALSE,
+        'file_extensions' => 'png jpg jpeg',
+        'max_filesize' => 5 * 1024 * 1024,
       ])
       ->setDisplayOptions('view', [
         'label' => 'hidden',

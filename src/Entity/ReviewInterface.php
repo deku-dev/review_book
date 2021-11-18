@@ -113,4 +113,42 @@ interface ReviewInterface extends ContentEntityInterface, EntityChangedInterface
    */
   public function setAvatar($avatar);
 
+  /**
+   * Gets picture review.
+   *
+   * @return string
+   *   Picture review.
+   */
+  public function getPicture();
+
+  /**
+   * Sets picture review.
+   *
+   * @param string $picture
+   *   Review picture.
+   *
+   * @return \Drupal\reviews_book\Entity\ReviewInterface
+   *   The called Review entity.
+   */
+  public function setPicture($picture);
+
+  /**
+   * Gets text review.
+   *
+   * @return string
+   *   Text review.
+   */
+  public function getText();
+
+  /**
+   * Sets text review.
+   *
+   * @param string $text
+   *   Review text.
+   *
+   * @return \Drupal\reviews_book\Entity\ReviewInterface
+   *   The called Review entity.
+   */
+  public function setText($text);
+
 }
