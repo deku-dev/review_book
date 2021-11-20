@@ -20,9 +20,6 @@ interface ReviewInterface extends ContentEntityInterface, EntityChangedInterface
 
   /**
    * Gets the Review name.
-   *
-   * @return string
-   *   Name of the Review.
    */
   public function getName();
 
@@ -31,17 +28,11 @@ interface ReviewInterface extends ContentEntityInterface, EntityChangedInterface
    *
    * @param string $name
    *   The Review name.
-   *
-   * @return \Drupal\reviews_book\Entity\ReviewInterface
-   *   The called Review entity.
    */
-  public function setName($name);
+  public function setName(string $name);
 
   /**
    * Gets the Review creation timestamp.
-   *
-   * @return int
-   *   Creation timestamp of the Review.
    */
   public function getCreatedTime();
 
@@ -50,17 +41,11 @@ interface ReviewInterface extends ContentEntityInterface, EntityChangedInterface
    *
    * @param int $timestamp
    *   The Review creation timestamp.
-   *
-   * @return \Drupal\reviews_book\Entity\ReviewInterface
-   *   The called Review entity.
    */
-  public function setCreatedTime($timestamp);
+  public function setCreatedTime(int $timestamp);
 
   /**
    * Gets the email for user review.
-   *
-   * @return string
-   *   Email of the review.
    */
   public function getEmail();
 
@@ -69,17 +54,11 @@ interface ReviewInterface extends ContentEntityInterface, EntityChangedInterface
    *
    * @param string $email
    *   The email user review.
-   *
-   * @return \Drupal\reviews_book\Entity\ReviewInterface
-   *   The called Review entity.
    */
-  public function setEmail($email);
+  public function setEmail(string $email);
 
   /**
    * Gets the tel number of the user.
-   *
-   * @return string
-   *   Telnumber of the user.
    */
   public function getTel();
 
@@ -88,17 +67,11 @@ interface ReviewInterface extends ContentEntityInterface, EntityChangedInterface
    *
    * @param string $tel_number
    *   The tel number of user.
-   *
-   * @return \Drupal\reviews_book\Entity\ReviewInterface
-   *   The called Review entity.
    */
-  public function setTel($tel_number);
+  public function setTel(string $tel_number);
 
   /**
    * Gets the avatar of the user who created review.
-   *
-   * @return string
-   *   User avatar.
    */
   public function getAvatar();
 
@@ -107,17 +80,11 @@ interface ReviewInterface extends ContentEntityInterface, EntityChangedInterface
    *
    * @param string $avatar
    *   The avatar user.
-   *
-   * @return \Drupal\reviews_book\Entity\ReviewInterface
-   *   The called Review entity.
    */
-  public function setAvatar($avatar);
+  public function setAvatar(string $avatar);
 
   /**
    * Gets picture review.
-   *
-   * @return string
-   *   Picture review.
    */
   public function getPicture();
 
@@ -126,17 +93,11 @@ interface ReviewInterface extends ContentEntityInterface, EntityChangedInterface
    *
    * @param string $picture
    *   Review picture.
-   *
-   * @return \Drupal\reviews_book\Entity\ReviewInterface
-   *   The called Review entity.
    */
-  public function setPicture($picture);
+  public function setPicture(string $picture);
 
   /**
    * Gets text review.
-   *
-   * @return string
-   *   Text review.
    */
   public function getText();
 
@@ -145,10 +106,7 @@ interface ReviewInterface extends ContentEntityInterface, EntityChangedInterface
    *
    * @param string $text
    *   Review text.
-   *
-   * @return \Drupal\reviews_book\Entity\ReviewInterface
-   *   The called Review entity.
    */
-  public function setText($text);
+  public function setText(string $text);
 
 }
