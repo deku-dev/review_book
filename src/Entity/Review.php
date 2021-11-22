@@ -9,7 +9,7 @@ use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityPublishedTrait;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\user\UserInterface;
-use \Drupal\user\EntityOwnerInterface;
+use Drupal\user\EntityOwnerInterface;
 
 /**
  * Defines the Review entity.
@@ -118,7 +118,7 @@ class Review extends ContentEntityBase implements ReviewInterface {
   /**
    * {@inheritdoc}
    */
-  public function setTel(string $tel_number): static {
+  public function setTel(string $tel_number) {
     $this->set('tel_number', $tel_number);
     return $this;
   }
@@ -133,7 +133,7 @@ class Review extends ContentEntityBase implements ReviewInterface {
   /**
    * {@inheritdoc}
    */
-  public function setAvatar(string $avatar): static {
+  public function setAvatar(string $avatar) {
     $this->set('avatar', $avatar);
     return $this;
   }
@@ -148,7 +148,7 @@ class Review extends ContentEntityBase implements ReviewInterface {
   /**
    * {@inheritdoc}
    */
-  public function setPicture(string $picture): static {
+  public function setPicture(string $picture) {
     $this->set('picture', $picture);
     return $this;
   }
@@ -163,7 +163,7 @@ class Review extends ContentEntityBase implements ReviewInterface {
   /**
    * {@inheritdoc}
    */
-  public function setText(string $text): static {
+  public function setText(string $text) {
     $this->set('text_review', $text);
     return $this;
   }
@@ -178,7 +178,7 @@ class Review extends ContentEntityBase implements ReviewInterface {
   /**
    * {@inheritdoc}
    */
-  public function setCreatedTime(int $timestamp): static {
+  public function setCreatedTime(int $timestamp) {
     $this->set('created', $timestamp);
     return $this;
   }
@@ -200,7 +200,7 @@ class Review extends ContentEntityBase implements ReviewInterface {
   /**
    * {@inheritdoc}
    */
-  public function setOwnerId($uid): EntityOwnerInterface|Review|static {
+  public function setOwnerId($uid): EntityOwnerInterface {
     $this->set('user_id', $uid);
     return $this;
   }
@@ -208,7 +208,7 @@ class Review extends ContentEntityBase implements ReviewInterface {
   /**
    * {@inheritdoc}
    */
-  public function setOwner(UserInterface $account): EntityOwnerInterface|Review|static {
+  public function setOwner(UserInterface $account): EntityOwnerInterface {
     $this->set('user_id', $account->id());
     return $this;
   }
