@@ -2,6 +2,8 @@
 
 namespace Drupal\reviews_book\Controller;
 
+use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Controller\ControllerBase;
 
 /**
@@ -14,12 +16,27 @@ class ReviewsBookController extends ControllerBase {
    */
   public function build() {
 
-    $build['content'] = [
-      '#type' => 'item',
-      '#markup' => $this->t('It works!'),
+//    $form_add = \Drupal::formBuilder()->getForm('Drupal\reviews_book\Form\ReviewForm');
+
+    $entity = \Drupal::entityTypeManager()->getStorage('review');
+    $query = $entity->getQuery();
+    $ids = $query->condition('status', 1)
+      ->sort('created', 'DESC')
+      ->pager(5)
+      ->execute();
+
+    $reviews = $entity->loadMultiple($ids);
+
+    $pager = [
+      '#type' => 'pager',
     ];
 
-    return $build;
+    return [
+      '#theme' => 'reviews_book',
+      '#form_add' => $form_add,
+      '#reviews' => $reviews,
+      '#pager' => $pager,
+    ];
   }
 
 }

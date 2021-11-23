@@ -1,5 +1,5 @@
 reviews_book.example:
-  path: '/reviews-book/example'
+  path: '/reviews-book/all'
   defaults:
     _title: 'Example'
     _controller: '\Drupal\reviews_book\Controller\ReviewsBookController::build'
@@ -10,6 +10,6 @@ reviews_book.settings_form:
   path: '/admin/config/system/reviews-book'
   defaults:
     _title: 'reviews_book settings'
-    _form: 'Drupal\reviews_book\Form\SettingsForm'
+    _form: 'Drupal\reviews_book\Form\ReviewForm'
   requirements:
     _permission: 'administer reviews_book configuration'

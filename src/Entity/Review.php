@@ -51,14 +51,14 @@ use Drupal\user\EntityOwnerInterface;
  *     "tel_number" = "tel_number",
  *     "avatar" = "avatar",
  *     "picture" = "picture",
- *     "text_review" = "text_review"
+ *     "text_review" = "text_review",
  *   },
  *   links = {
- *     "canonical" = "/reviews/review/{review}",
- *     "add-form" = "/reviews/review/add",
- *     "edit-form" = "/reviews/review/{review}/edit",
- *     "delete-form" = "/reviews/review/{review}/delete",
- *     "collection" = "/reviews/review",
+ *     "canonical" = "/review/{review}",
+ *     "add-form" = "/reviews/add",
+ *     "edit-form" = "/reviews/{review}/edit",
+ *     "delete-form" = "/reviews/{review}/delete",
+ *     "collection" = "/reviews",
  *   },
  *   field_ui_base_route = "review.settings"
  * )
@@ -127,7 +127,7 @@ class Review extends ContentEntityBase implements ReviewInterface {
    * {@inheritdoc}
    */
   public function getAvatar() {
-    return $this->get('avatar')->value;
+    return $this->get('avatar')->getValue()[0];
   }
 
   /**
@@ -142,7 +142,7 @@ class Review extends ContentEntityBase implements ReviewInterface {
    * {@inheritdoc}
    */
   public function getPicture() {
-    return $this->get('picture')->value;
+    return $this->get('picture')->getValue()[0];
   }
 
   /**
@@ -266,6 +266,7 @@ class Review extends ContentEntityBase implements ReviewInterface {
         'Length' => [
           'min' => 2,
           'minMessage' => t('Your name is to short. Please enter valid name.'),
+          'maxMessage' => t('Your name is to long. Please enter valid name.'),
         ],
       ])
       ->setDisplayOptions('form', [
@@ -341,7 +342,7 @@ class Review extends ContentEntityBase implements ReviewInterface {
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
-    $fields['review_picture'] = BaseFieldDefinition::create('image')
+    $fields['picture'] = BaseFieldDefinition::create('image')
       ->setLabel(t('Review picture'))
       ->setDescription(t('Review picture for review.'))
       ->setDefaultValue(NULL)
@@ -364,7 +365,7 @@ class Review extends ContentEntityBase implements ReviewInterface {
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
-    $fields['review_text'] = BaseFieldDefinition::create('string_long')
+    $fields['text_review'] = BaseFieldDefinition::create('string_long')
       ->setLabel(t('Review text'))
       ->setDescription(t('The review text.'))
       ->setSettings([
