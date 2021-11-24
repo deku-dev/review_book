@@ -2,30 +2,57 @@
 
 namespace Drupal\reviews_book\Controller;
 
-use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
-use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Controller\ControllerBase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Returns responses for reviews_book routes.
  */
 class ReviewsBookController extends ControllerBase {
 
+
+  protected $entityManager;
+
+
+  protected $formBuilder;
+
+  public static function create(ContainerInterface $container)
+  {
+    $instance = parent::create($container);
+    $instance->entityManager = $container->get('entity_type.manager');
+    $instance->formBuilder = $container->get('entity.form_builder');
+    return $instance;
+  }
+
   /**
    * Builds the response.
    */
   public function build() {
 
-//    $form_add = \Drupal::formBuilder()->getForm('Drupal\reviews_book\Form\ReviewForm');
+    $form_add = \Drupal::formBuilder()->getForm('Drupal\reviews_book\Form\ReviewsAdd');
 
-    $entity = \Drupal::entityTypeManager()->getStorage('review');
-    $query = $entity->getQuery();
+    $entity = $this->entityManager
+      ->getStorage('review')
+      ->create([
+        'entity_type' => 'node',
+        'entity' => 'review',
+      ]);
+
+    $form_add = $this->formBuilder->getForm($entity, 'add');
+
+    $builder = $this->entityTypeManager()->getViewBuilder('review');
+    $storage = $this->entityManager->getStorage('review');
+    $query = $storage->getQuery();
     $ids = $query->condition('status', 1)
       ->sort('created', 'DESC')
       ->pager(5)
       ->execute();
 
-    $reviews = $entity->loadMultiple($ids);
+    $reviews = $storage->loadMultiple($ids);
+
+    foreach ($reviews as $key => $review) {
+      $reviews[$key] = $builder->view($review);
+    }
 
     $pager = [
       '#type' => 'pager',

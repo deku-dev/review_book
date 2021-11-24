@@ -234,11 +234,11 @@ class Review extends ContentEntityBase implements ReviewInterface {
       ->setDisplayOptions('view', [
         'label' => 'hidden',
         'type' => 'author',
-        'weight' => 0,
+        'weight' => -1,
       ])
       ->setDisplayOptions('form', [
         'type' => 'entity_reference_autocomplete',
-        'weight' => 5,
+        'weight' => -1,
         'settings' => [
           'match_operator' => 'CONTAINS',
           'size' => '60',
@@ -255,12 +255,13 @@ class Review extends ContentEntityBase implements ReviewInterface {
       ->setSettings([
         'max_length' => 100,
         'text_processing' => 0,
+        'min_length' => 2
       ])
       ->setDefaultValue('')
       ->setDisplayOptions('view', [
         'label' => 'above',
         'type' => 'string',
-        'weight' => -4,
+        'weight' => 0,
       ])
       ->setPropertyConstraints('value', [
         'Length' => [
@@ -271,7 +272,7 @@ class Review extends ContentEntityBase implements ReviewInterface {
       ])
       ->setDisplayOptions('form', [
         'type' => 'string_textfield',
-        'weight' => -4,
+        'weight' => 0,
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE)
@@ -281,14 +282,15 @@ class Review extends ContentEntityBase implements ReviewInterface {
       ->setLabel(t('Email'))
       ->setDescription(t('The email of the user.'))
       ->setDefaultValue('')
+
       ->setDisplayOptions('view', [
         'label' => 'above',
         'type' => 'email',
-        'weight' => -5,
+        'weight' => 1,
       ])
       ->setDisplayOptions('form', [
         'type' => 'string_email',
-        'weight' => -6,
+        'weight' => 1,
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE)
@@ -301,11 +303,14 @@ class Review extends ContentEntityBase implements ReviewInterface {
       ->setDisplayOptions('view', [
         'label' => 'above',
         'type' => 'tel',
-        'weight' => -7,
+        'weight' => 2,
       ])
       ->setDisplayOptions('form', [
         'type' => 'string_tel',
-        'weight' => -8,
+        'weight' => 2,
+      ])
+      ->setSettings([
+        'pattern' => '^\+?\d{10,15}$'
       ])
       ->setPropertyConstraints(
         'value', [
@@ -332,12 +337,12 @@ class Review extends ContentEntityBase implements ReviewInterface {
       ->setDisplayOptions('view', [
         'label' => 'hidden',
         'type' => 'default',
-        'weight' => 0,
+        'weight' => 3,
       ])
       ->setDisplayOptions('form', [
         'label' => 'hidden',
         'type' => 'image_image',
-        'weight' => 0,
+        'weight' => 3,
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
@@ -355,12 +360,12 @@ class Review extends ContentEntityBase implements ReviewInterface {
       ->setDisplayOptions('view', [
         'label' => 'hidden',
         'type' => 'default',
-        'weight' => 0,
+        'weight' => 4,
       ])
       ->setDisplayOptions('form', [
         'label' => 'hidden',
         'type' => 'image_image',
-        'weight' => 0,
+        'weight' => 4,
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
@@ -369,24 +374,17 @@ class Review extends ContentEntityBase implements ReviewInterface {
       ->setLabel(t('Review text'))
       ->setDescription(t('The review text.'))
       ->setSettings([
-        'max_length' => 100,
         'text_processing' => 0,
       ])
       ->setDefaultValue('')
       ->setDisplayOptions('view', [
         'label' => 'above',
         'type' => 'string',
-        'weight' => -4,
-      ])
-      ->setPropertyConstraints('value', [
-        'Length' => [
-          'min' => 2,
-          'minMessage' => t('Your name is to short. Please enter valid name.'),
-        ],
+        'weight' => 5,
       ])
       ->setDisplayOptions('form', [
         'type' => 'string_textfield',
-        'weight' => -4,
+        'weight' => 5,
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE)
@@ -395,7 +393,7 @@ class Review extends ContentEntityBase implements ReviewInterface {
     $fields['status']->setDescription(t('A boolean indicating whether the Review is published.'))
       ->setDisplayOptions('form', [
         'type' => 'boolean_checkbox',
-        'weight' => -3,
+        'weight' => 6,
       ]);
 
     $fields['created'] = BaseFieldDefinition::create('created')

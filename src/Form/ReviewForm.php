@@ -36,7 +36,6 @@ class ReviewForm extends ContentEntityForm {
   public function buildForm(array $form, FormStateInterface $form_state) {
     /** @var \Drupal\reviews_book\Entity\Review $entity */
     $form = parent::buildForm($form, $form_state);
-
     return $form;
   }
 

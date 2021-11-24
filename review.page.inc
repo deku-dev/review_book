@@ -12,7 +12,7 @@ use Drupal\Core\Render\Element;
 /**
  * Prepares variables for Review templates.
  *
- * Default template: review.html.twig.
+ * Default template: review_book.html.twig.
  *
  * @param array $variables
  *   An associative array containing:

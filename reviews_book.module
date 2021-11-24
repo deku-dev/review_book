@@ -8,3 +8,21 @@
  * This file is no longer required in Drupal 8.
  * @see https://www.drupal.org/node/2217931
  */
+
+use JetBrains\PhpStorm\ArrayShape;
+
+/**
+ * Implements hook_theme().
+ */
+function reviews_book_theme($existing, $type, $theme, $path): array {
+  return [
+    'reviews_book' => [
+      'variables' => [
+        'form_add' => NULL,
+        'reviews' => NULL,
+        'pager' => NULL
+      ],
+      'template' => 'reviews_book',
+    ]
+  ];
+}
