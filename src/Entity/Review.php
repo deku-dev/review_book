@@ -47,11 +47,6 @@ use Drupal\user\EntityOwnerInterface;
  *     "uid" = "user_id",
  *     "langcode" = "langcode",
  *     "published" = "status",
- *     "email" = "email",
- *     "tel_number" = "tel_number",
- *     "avatar" = "avatar",
- *     "picture" = "picture",
- *     "text_review" = "text_review",
  *   },
  *   links = {
  *     "canonical" = "/review/{review}",
@@ -327,7 +322,7 @@ class Review extends ContentEntityBase implements ReviewInterface {
     $fields['avatar'] = BaseFieldDefinition::create('image')
       ->setLabel(t('Avatar user'))
       ->setDescription(t('User avatar who create the review.'))
-      ->setDefaultValue(NULL)
+      ->setDefaultValue('modules/custom/reviews_book/icons/image-not-found.png')
       ->setSettings([
         'file_directory' => 'public://reviews_book/avatar',
         'alt_field_required' => FALSE,
@@ -345,12 +340,12 @@ class Review extends ContentEntityBase implements ReviewInterface {
         'weight' => 3,
       ])
       ->setDisplayConfigurable('form', TRUE)
-      ->setDisplayConfigurable('view', TRUE);
+      ->setDisplayConfigurable('view', TRUE)
+      ->setRequired(TRUE);
 
     $fields['picture'] = BaseFieldDefinition::create('image')
       ->setLabel(t('Review picture'))
       ->setDescription(t('Review picture for review.'))
-      ->setDefaultValue(NULL)
       ->setSettings([
         'file_directory' => 'public://reviews_book/picture',
         'alt_field_required' => FALSE,
@@ -367,6 +362,7 @@ class Review extends ContentEntityBase implements ReviewInterface {
         'type' => 'image_image',
         'weight' => 4,
       ])
+
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
