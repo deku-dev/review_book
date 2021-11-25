@@ -2,6 +2,8 @@
 
 namespace Drupal\reviews_book\Form;
 
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -21,6 +23,11 @@ class ReviewForm extends ContentEntityForm {
   protected $account;
 
   /**
+   * @var $cssCommandDanger
+   */
+  public $cssCommandDanger;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
@@ -34,10 +41,26 @@ class ReviewForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    /* @var \Drupal\reviews_book\Entity\Review $entity */
+    /** @var \Drupal\reviews_book\Entity\Review $entity */
     $form = parent::buildForm($form, $form_state);
-
     return $form;
+  }
+
+  /**
+   * Validate name user ajax.
+   */
+  public function validateName(array &$form, FormStateInterface $form_state): AjaxResponse {
+    $response = new AjaxResponse();
+    $len_name = strlen($form_state->getValue('name'));
+    if ($len_name < 2) {
+      return $response->addCommand(new HtmlCommand('#name-label', 'The user name is to short.'));
+    }
+    elseif ($len_name > 100) {
+      return $response->addCommand(new HtmlCommand('#name-label', 'The user name is to long.'));
+    }
+    else {
+      return $response->addCommand(new HtmlCommand('#name-label', ''));
+    }
   }
 
   /**

@@ -1,6 +1,6 @@
 {#
 /**
- * @file review.html.twig
+ * @file review_book.html.twig
  * Default theme implementation to present Review data.
  *
  * This template is used when viewing Review pages.
@@ -15,8 +15,7 @@
  * @ingroup themeable
  */
 #}
-<div{{ attributes.addClass('review') }}>
-  {% if content %}
-    {{- content -}}
-  {% endif %}
-</div>
+{{ form_add }}
+{{ reviews }}
+{{ dump(reviews) }}
+{{ pager }}

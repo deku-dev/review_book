@@ -9,6 +9,7 @@ use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityPublishedTrait;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\user\UserInterface;
+use Drupal\user\EntityOwnerInterface;
 
 /**
  * Defines the Review entity.
@@ -46,15 +47,13 @@ use Drupal\user\UserInterface;
  *     "uid" = "user_id",
  *     "langcode" = "langcode",
  *     "published" = "status",
- *     "email" = "email",
- *     "tel_number" = "tel_number"
  *   },
  *   links = {
- *     "canonical" = "/reviews/review/{review}",
- *     "add-form" = "/reviews/review/add",
- *     "edit-form" = "/reviews/review/{review}/edit",
- *     "delete-form" = "/reviews/review/{review}/delete",
- *     "collection" = "/reviews/review",
+ *     "canonical" = "/review/{review}",
+ *     "add-form" = "/reviews/add",
+ *     "edit-form" = "/reviews/{review}/edit",
+ *     "delete-form" = "/reviews/{review}/delete",
+ *     "collection" = "/reviews",
  *   },
  *   field_ui_base_route = "review.settings"
  * )
@@ -67,8 +66,8 @@ class Review extends ContentEntityBase implements ReviewInterface {
   /**
    * {@inheritdoc}
    */
-  public static function preCreate(EntityStorageInterface $storage_controller, array &$values) {
-    parent::preCreate($storage_controller, $values);
+  public static function preCreate(EntityStorageInterface $storage, array &$values) {
+    parent::preCreate($storage, $values);
     $values += [
       'user_id' => \Drupal::currentUser()->id(),
     ];
@@ -84,7 +83,7 @@ class Review extends ContentEntityBase implements ReviewInterface {
   /**
    * {@inheritdoc}
    */
-  public function setName($name) {
+  public function setName(string $name) {
     $this->set('name', $name);
     return $this;
   }
@@ -99,7 +98,7 @@ class Review extends ContentEntityBase implements ReviewInterface {
   /**
    * {@inheritdoc}
    */
-  public function setEmail($email) {
+  public function setEmail(string $email) {
     $this->set('name', $email);
     return $this;
   }
@@ -114,8 +113,53 @@ class Review extends ContentEntityBase implements ReviewInterface {
   /**
    * {@inheritdoc}
    */
-  public function setTel($tel_number) {
+  public function setTel(string $tel_number) {
     $this->set('tel_number', $tel_number);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getAvatar() {
+    return $this->get('avatar')->getValue()[0];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setAvatar(string $avatar) {
+    $this->set('avatar', $avatar);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPicture() {
+    return $this->get('picture')->getValue()[0];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setPicture(string $picture) {
+    $this->set('picture', $picture);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getText() {
+    return $this->get('text_review')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setText(string $text) {
+    $this->set('text_review', $text);
     return $this;
   }
 
@@ -129,7 +173,7 @@ class Review extends ContentEntityBase implements ReviewInterface {
   /**
    * {@inheritdoc}
    */
-  public function setCreatedTime($timestamp) {
+  public function setCreatedTime(int $timestamp) {
     $this->set('created', $timestamp);
     return $this;
   }
@@ -137,21 +181,21 @@ class Review extends ContentEntityBase implements ReviewInterface {
   /**
    * {@inheritdoc}
    */
-  public function getOwner() {
+  public function getOwner(): UserInterface {
     return $this->get('user_id')->entity;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getOwnerId() {
+  public function getOwnerId(): ?int {
     return $this->get('user_id')->target_id;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setOwnerId($uid) {
+  public function setOwnerId($uid): EntityOwnerInterface {
     $this->set('user_id', $uid);
     return $this;
   }
@@ -159,15 +203,17 @@ class Review extends ContentEntityBase implements ReviewInterface {
   /**
    * {@inheritdoc}
    */
-  public function setOwner(UserInterface $account) {
+  public function setOwner(UserInterface $account): EntityOwnerInterface {
     $this->set('user_id', $account->id());
     return $this;
   }
 
   /**
    * {@inheritdoc}
+   *
+   * @throws \Drupal\Core\Entity\Exception\UnsupportedEntityTypeDefinitionException
    */
-  public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
+  public static function baseFieldDefinitions(EntityTypeInterface $entity_type): array {
     $fields = parent::baseFieldDefinitions($entity_type);
 
     // Add the published field.
@@ -183,11 +229,11 @@ class Review extends ContentEntityBase implements ReviewInterface {
       ->setDisplayOptions('view', [
         'label' => 'hidden',
         'type' => 'author',
-        'weight' => 0,
+        'weight' => -1,
       ])
       ->setDisplayOptions('form', [
         'type' => 'entity_reference_autocomplete',
-        'weight' => 5,
+        'weight' => -1,
         'settings' => [
           'match_operator' => 'CONTAINS',
           'size' => '60',
@@ -202,18 +248,26 @@ class Review extends ContentEntityBase implements ReviewInterface {
       ->setLabel(t('Name'))
       ->setDescription(t('The name of the Review entity.'))
       ->setSettings([
-        'max_length' => 50,
+        'max_length' => 100,
         'text_processing' => 0,
+        'min_length' => 2
       ])
       ->setDefaultValue('')
       ->setDisplayOptions('view', [
         'label' => 'above',
         'type' => 'string',
-        'weight' => -4,
+        'weight' => 0,
+      ])
+      ->setPropertyConstraints('value', [
+        'Length' => [
+          'min' => 2,
+          'minMessage' => t('Your name is to short. Please enter valid name.'),
+          'maxMessage' => t('Your name is to long. Please enter valid name.'),
+        ],
       ])
       ->setDisplayOptions('form', [
         'type' => 'string_textfield',
-        'weight' => -4,
+        'weight' => 0,
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE)
@@ -223,14 +277,15 @@ class Review extends ContentEntityBase implements ReviewInterface {
       ->setLabel(t('Email'))
       ->setDescription(t('The email of the user.'))
       ->setDefaultValue('')
+
       ->setDisplayOptions('view', [
         'label' => 'above',
         'type' => 'email',
-        'weight' => -5,
+        'weight' => 1,
       ])
       ->setDisplayOptions('form', [
         'type' => 'string_email',
-        'weight' => -6,
+        'weight' => 1,
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE)
@@ -243,11 +298,89 @@ class Review extends ContentEntityBase implements ReviewInterface {
       ->setDisplayOptions('view', [
         'label' => 'above',
         'type' => 'tel',
-        'weight' => -7,
+        'weight' => 2,
       ])
       ->setDisplayOptions('form', [
         'type' => 'string_tel',
-        'weight' => -8,
+        'weight' => 2,
+      ])
+      ->setSettings([
+        'pattern' => '^\+?\d{10,15}$'
+      ])
+      ->setPropertyConstraints(
+        'value', [
+          'Regex' => [
+            'pattern' => '/^\+?\d{10,15}$/',
+            'message' => t('Your number mobile is not valid. Please enter the valid tel number'),
+          ],
+        ]
+      )
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE)
+      ->setRequired(TRUE);
+
+    $fields['avatar'] = BaseFieldDefinition::create('image')
+      ->setLabel(t('Avatar user'))
+      ->setDescription(t('User avatar who create the review.'))
+      ->setDefaultValue('modules/custom/reviews_book/icons/image-not-found.png')
+      ->setSettings([
+        'file_directory' => 'public://reviews_book/avatar',
+        'alt_field_required' => FALSE,
+        'file_extensions' => 'png jpg jpeg',
+        'max_filesize' => 2 * 1024 * 1024,
+      ])
+      ->setDisplayOptions('view', [
+        'label' => 'hidden',
+        'type' => 'default',
+        'weight' => 3,
+      ])
+      ->setDisplayOptions('form', [
+        'label' => 'hidden',
+        'type' => 'image_image',
+        'weight' => 3,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE)
+      ->setRequired(TRUE);
+
+    $fields['picture'] = BaseFieldDefinition::create('image')
+      ->setLabel(t('Review picture'))
+      ->setDescription(t('Review picture for review.'))
+      ->setSettings([
+        'file_directory' => 'public://reviews_book/picture',
+        'alt_field_required' => FALSE,
+        'file_extensions' => 'png jpg jpeg',
+        'max_filesize' => 5 * 1024 * 1024,
+      ])
+      ->setDisplayOptions('view', [
+        'label' => 'hidden',
+        'type' => 'default',
+        'weight' => 4,
+      ])
+      ->setDisplayOptions('form', [
+        'label' => 'hidden',
+        'type' => 'image_image',
+        'weight' => 4,
+      ])
+
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
+
+    $fields['text_review'] = BaseFieldDefinition::create('string_long')
+      ->setLabel(t('Review text'))
+      ->setDescription(t('The review text.'))
+      ->setSettings([
+        'text_processing' => 0,
+      ])
+      ->setDefaultValue('')
+      ->setDisplayOptions('view', [
+        'label' => 'above',
+        'type' => 'string',
+        'weight' => 5,
+      ])
+      ->setDisplayOptions('form', [
+        'type' => 'string_textfield',
+        'weight' => 5,
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE)
@@ -256,7 +389,7 @@ class Review extends ContentEntityBase implements ReviewInterface {
     $fields['status']->setDescription(t('A boolean indicating whether the Review is published.'))
       ->setDisplayOptions('form', [
         'type' => 'boolean_checkbox',
-        'weight' => -3,
+        'weight' => 6,
       ]);
 
     $fields['created'] = BaseFieldDefinition::create('created')

@@ -22,7 +22,7 @@ function reviews_book_uninstall() {
 /**
  * Implements hook_schema().
  */
-function reviews_book_schema() {
+function reviews_book_schema(): array {
   $schema['reviews_book_example'] = [
     'description' => 'Table description.',
     'fields' => [
