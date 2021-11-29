@@ -47,6 +47,9 @@ class ReviewListBuilder extends EntityListBuilder {
     return $images;
 
   }
+
+
+
   /**
    * {@inheritdoc}
    */
